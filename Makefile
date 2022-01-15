@@ -2,7 +2,7 @@ VERSION = 2
 LIBRARY_PREFIX = pam_watchid
 LIBRARY_NAME = $(LIBRARY_PREFIX).so
 DESTINATION = /usr/local/lib/pam
-TARGET = apple-darwin20.1.0
+TARGET = apple-darwin$(shell uname -r)
 
 all:
 	swiftc watchid-pam-extension.swift -o $(LIBRARY_PREFIX)_x86_64.so -target x86_64-$(TARGET) -emit-library
@@ -12,3 +12,6 @@ all:
 install: all
 	mkdir -p $(DESTINATION)
 	install -o root -g wheel -m 444 $(LIBRARY_NAME) $(DESTINATION)/$(LIBRARY_NAME).$(VERSION)
+
+enable: install
+	grep $(LIBRARY_NAME) /etc/pam.d/sudo > /dev/null || sed -i '' '$(LINE){h;s/.*/$auth sufficient $(LIBRARY_NAME)/;p;g;}' $(FILE) 
