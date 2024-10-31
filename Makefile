@@ -6,11 +6,13 @@ TARGET = apple-darwin$(shell uname -r)
 PAM_FILE_BASE = /etc/pam.d/sudo
 PAM_TEXT = auth sufficient $(LIBRARY_NAME)
 PAM_TID_TEXT = auth       sufficient     pam_tid.so
+
+# Determine if the macOS Sequoia SDK or later is available based on the installed macOS version.
 DEFINES =
 MACOS_MAJOR_VER = $(shell sw_vers --productVersion | cut -d. -f1)
 COMPANION_REQUIRED_MAJOR_VER = 15
 ifeq "$(COMPANION_REQUIRED_MAJOR_VER)" "$(word 1, $(sort $(COMPANION_REQUIRED_MAJOR_VER) $(MACOS_MAJOR_VER)))"
-	DEFINES += -DHASCOMPANION
+	DEFINES += -DSEQUOIASDK
 endif
 
 all:
