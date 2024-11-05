@@ -9,9 +9,11 @@ PAM_TID_TEXT = auth       sufficient     pam_tid.so
 
 # Determine if the macOS Sequoia SDK or later is available.
 DEFINES =
-MACOS_MAJOR_VER = $(shell basename $(shell xcrun --sdk macosx --show-sdk-path) | sed 's/MacOSX//' | cut -d. -f1)
-COMPANION_REQUIRED_MAJOR_VER = 15
-ifeq "$(COMPANION_REQUIRED_MAJOR_VER)" "$(word 1, $(sort $(COMPANION_REQUIRED_MAJOR_VER) $(MACOS_MAJOR_VER)))"
+# Due to the different ways in which the CLT and Xcode structure their SDK paths, one of the following will always be an empty string depending on what is configured by xcode-select. 
+CLT_SDK_MAJOR_VER = $(shell xcrun --sdk macosx --show-sdk-path | xargs realpath | xargs basename | sed 's/MacOSX//' | cut -d. -f1)
+XCODE_SDK_MAJOR_VER = $(shell xcrun --sdk macosx --show-sdk-path | xargs basename | sed 's/MacOSX//' | cut -d. -f1)
+SDK_REQUIRED_MAJOR_VER = 15
+ifeq "$(SDK_REQUIRED_MAJOR_VER)" "$(word 1, $(sort $(SDK_REQUIRED_MAJOR_VER) $(XCODE_SDK_MAJOR_VER) $(CLT_SDK_MAJOR_VER)))"
 	DEFINES += -DSEQUOIASDK
 endif
 
@@ -26,11 +28,11 @@ install: all
 
 enable: install
 ifeq (,$(wildcard $(PAM_FILE_BASE)_local.template))
-		$(eval PAM_FILE = $(PAM_FILE_BASE))
-		grep $(LIBRARY_NAME) $(PAM_FILE) > /dev/null || sudo sed '2{h;s/.*/$(PAM_TEXT)/;p;g;}' $(PAM_FILE) | sudo tee $(PAM_FILE)
+	$(eval PAM_FILE = $(PAM_FILE_BASE))
+	grep $(LIBRARY_NAME) $(PAM_FILE) > /dev/null || sudo sed '2{h;s/.*/$(PAM_TEXT)/;p;g;}' $(PAM_FILE) | sudo tee $(PAM_FILE)
 else
-		$(eval PAM_FILE = $(PAM_FILE_BASE)_local)
-		sudo sh -c '[[ "$(shell cat $(PAM_FILE).template)" != "$(shell cat $(PAM_FILE))" ]] && cat $(PAM_FILE).template >> $(PAM_FILE) || true'
-		sudo sed -i ".old" -e '/$(PAM_TID_TEXT)/s/^#//g' $(PAM_FILE)
-		sudo sh -c 'echo $(PAM_TEXT) >> $(PAM_FILE)'
+	$(eval PAM_FILE = $(PAM_FILE_BASE)_local)
+	sudo sh -c '[[ "$(shell cat $(PAM_FILE).template)" != "$(shell cat $(PAM_FILE))" ]] && cat $(PAM_FILE).template >> $(PAM_FILE) || true'
+	sudo sed -i ".old" -e '/$(PAM_TID_TEXT)/s/^#//g' $(PAM_FILE)
+	sudo sh -c 'echo $(PAM_TEXT) >> $(PAM_FILE)'
 endif
