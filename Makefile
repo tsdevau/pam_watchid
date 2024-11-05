@@ -10,7 +10,7 @@ PAM_TID_TEXT = auth       sufficient     pam_tid.so
 # Determine if the macOS Sequoia SDK or later is available.
 DEFINES =
 # Due to the different ways in which the CLT and Xcode structure their SDK paths, one of the following will always be an empty string depending on what is configured by xcode-select. 
-CLT_SDK_MAJOR_VER = $(shell xcrun --sdk macosx --show-sdk-path | xargs realpath | xargs basename | sed 's/MacOSX//' | cut -d. -f1)
+CLT_SDK_MAJOR_VER = $(shell xcrun --sdk macosx --show-sdk-path | xargs readlink -f | xargs basename | sed 's/MacOSX//' | cut -d. -f1)
 XCODE_SDK_MAJOR_VER = $(shell xcrun --sdk macosx --show-sdk-path | xargs basename | sed 's/MacOSX//' | cut -d. -f1)
 SDK_REQUIRED_MAJOR_VER = 15
 ifeq "$(SDK_REQUIRED_MAJOR_VER)" "$(word 1, $(sort $(SDK_REQUIRED_MAJOR_VER) $(XCODE_SDK_MAJOR_VER) $(CLT_SDK_MAJOR_VER)))"
