@@ -57,26 +57,3 @@ jobs:
       if: ${{ matrix.xcode-select == 'xcode' && matrix.version == 15 }}
       with:
         subject-path: ${{ env.outPath }}
-
-    - name: Purge old artifacts
-      uses: actions/github-script@v4
-      if: ${{ matrix.xcode-select == 'xcode' && matrix.version == 15 && github.event_name != 'pull_request' }}
-      with:
-        script: |
-          const { owner, repo } = context.issue
-          
-          const res = await github.rest.actions.listArtifactsForRepo({
-            owner,
-            repo,
-          })
-          
-          res.data.artifacts
-            .filter(({ name }) => name === 'pam-watchid.so.${{ steps.getVersion.outputs.version }}')
-            .sort((a, b) => a.workflow_run.id - b.workflow_run.id).slice(0, -1)
-            .forEach(({ id }) => {
-              github.rest.actions.deleteArtifact({
-                owner,
-                repo,
-                artifact_id: id,
-              })
-            })
