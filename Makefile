@@ -1,4 +1,4 @@
-VERSION = $(cat version)
+VERSION = $(shell cat VERSION)
 LIBRARY_PREFIX = pam_watchid
 LIBRARY_NAME = $(LIBRARY_PREFIX).so
 DESTINATION = /usr/local/lib/pam
@@ -18,6 +18,7 @@ ifeq "$(SDK_REQUIRED_MAJOR_VER)" "$(word 1, $(sort $(SDK_REQUIRED_MAJOR_VER) $(X
 endif
 
 all:
+	echo $(VERSION)
 	swiftc watchid-pam-extension.swift $(DEFINES) -o $(LIBRARY_PREFIX)_x86_64.so -target x86_64-$(TARGET) -emit-library
 	swiftc watchid-pam-extension.swift $(DEFINES) -o $(LIBRARY_PREFIX)_arm64.so -target arm64-$(TARGET) -emit-library
 	lipo -create $(LIBRARY_PREFIX)_arm64.so $(LIBRARY_PREFIX)_x86_64.so -output $(LIBRARY_NAME)

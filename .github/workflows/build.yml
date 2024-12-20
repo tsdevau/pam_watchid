@@ -9,7 +9,7 @@ on:
     - cron: '0 0 1 */2 *'
 
 env:
-  outPath: "/usr/local/lib/pam/pam-watchid.so.2"
+  outPath: "/usr/local/lib/pam/pam_watchid.so"
 
 jobs:
   build:
@@ -41,6 +41,7 @@ jobs:
 
     - name: Get Version
       id: getVersion
+      if: ${{ matrix.xcode-select == 'xcode' && matrix.version == 15 }}
       run: echo "version=$(cat version)" >> "$GITHUB_OUTPUT"
 
     - name: Upload artifacts
@@ -48,7 +49,7 @@ jobs:
       if: ${{ matrix.xcode-select == 'xcode' && matrix.version == 15 }}
       with:
         name: pam-watchid.so.${{ steps.getVersion.outputs.version }}
-        path: ${{ env.outPath }}
+        path: ${{ env.outPath }}.${{ steps.getVersion.outputs.version }}
         if-no-files-found: error
         retention-days: ${{ github.event_name == 'pull_request' && 7 || 90 }}
 
@@ -56,4 +57,4 @@ jobs:
       uses: actions/attest-build-provenance@v2
       if: ${{ matrix.xcode-select == 'xcode' && matrix.version == 15 }}
       with:
-        subject-path: ${{ env.outPath }}
+        subject-path: ${{ env.outPath }}.${{ steps.getVersion.outputs.version }}
