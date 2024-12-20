@@ -5,6 +5,11 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  schedule:
+    - cron: '0 0 1 */2 *'
+
+env:
+  outPath: "/usr/local/lib/pam/pam-watchid.so.2"
 
 jobs:
   build:
@@ -18,6 +23,11 @@ jobs:
 
     runs-on: macos-${{ matrix.version }}
 
+    permissions:
+      id-token: write
+      contents: read
+      attestations: write
+
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -29,3 +39,44 @@ jobs:
     - name: Build
       run: make enable
 
+    - name: Get Version
+      id: getVersion
+      run: echo "version=$(cat version)" >> "$GITHUB_OUTPUT"
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      if: ${{ matrix.xcode-select == 'xcode' && matrix.version == 15 }}
+      with:
+        name: pam-watchid.so.${{ steps.getVersion.outputs.version }}
+        path: ${{ env.outPath }}
+        if-no-files-found: error
+        retention-days: ${{ github.event_name == 'pull_request' && 7 || 90 }}
+
+    - name: Generate artifact attestation
+      uses: actions/attest-build-provenance@v2
+      if: ${{ matrix.xcode-select == 'xcode' && matrix.version == 15 }}
+      with:
+        subject-path: ${{ env.outPath }}
+
+    - name: Purge old artifacts
+      uses: actions/github-script@v4
+      if: ${{ matrix.xcode-select == 'xcode' && matrix.version == 15 && github.event_name != 'pull_request' }}
+      with:
+        script: |
+          const { owner, repo } = context.issue
+          
+          const res = await github.rest.actions.listArtifactsForRepo({
+            owner,
+            repo,
+          })
+          
+          res.data.artifacts
+            .filter(({ name }) => name === 'pam-watchid.so.${{ steps.getVersion.outputs.version }}')
+            .sort((a, b) => a.workflow_run.id - b.workflow_run.id).slice(0, -1)
+            .forEach(({ id }) => {
+              github.rest.actions.deleteArtifact({
+                owner,
+                repo,
+                artifact_id: id,
+              })
+            })

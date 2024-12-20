@@ -1,4 +1,4 @@
-VERSION = 2
+VERSION = $(cat version)
 LIBRARY_PREFIX = pam_watchid
 LIBRARY_NAME = $(LIBRARY_PREFIX).so
 DESTINATION = /usr/local/lib/pam
