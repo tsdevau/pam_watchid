@@ -6,7 +6,7 @@ A PAM plugin for authenticating using the new `kLAPolicyDeviceOwnerAuthenticatio
 
 ## Prerequisites
 
-* The most up to date version of either Xcode or the Xcode command line tools (CLT) for your version of macOS. If you do not yet have either installed or are unsure if you do, you can install the CLT with the following command:
+* The most up to date version of either Xcode or the Xcode command line tools (CLT) for your version of macOS. This includes all of the tools needed to build the module, including `swiftc`, `make`, and `git`. If you do not yet have either installed, you should be prompted automatically to install teh CLT when you first try to follow the [install instructions](#installation). You can also install the CLT manually with the following command:
 
 ```sh
 xcode-select --install
