@@ -39,5 +39,5 @@ else
 # Uncomment pam_tid.so
 	grep $(LIBRARY_NAME) $(PAM_FILE) > /dev/null || sudo sed -i ".old" -e '/$(PAM_TID_TEXT)/s/^#//g' $(PAM_FILE)
 # Insert $(PAM_TEXT) after the pam_tid.so line. This allows pam_tid.so to be used by default (which unexpectedly allows watch authentication as well) with pam_watchid.so as a fallback in cases where pam_tid.so falls through due to TouchID being deemed unavailable by macOS.
-	grep $(LIBRARY_NAME) $(PAM_FILE) > /dev/null || sudo sed -i "" -e '/$(PAM_TID_TEXT)/s/$$/\nauth sufficient $(LIBRARY_NAME)/g' $(PAM_FILE)
+	grep $(LIBRARY_NAME) $(PAM_FILE) > /dev/null || sudo sed -i "" -e '/$(PAM_TID_TEXT)/s/$$/\n$(PAM_TEXT)/g' $(PAM_FILE)
 endif
