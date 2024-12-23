@@ -55,6 +55,6 @@ jobs:
 
     - name: Generate artifact attestation
       uses: actions/attest-build-provenance@v2
-      if: ${{ matrix.xcode-select == 'xcode' && matrix.version == 15 }}
+      if: ${{ matrix.xcode-select == 'xcode' && matrix.version == 15 && github.event_name != 'pull_request' && github.ref == 'refs/heads/main' }}
       with:
         subject-path: ${{ env.outPath }}.${{ steps.getVersion.outputs.version }}
