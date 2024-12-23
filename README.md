@@ -20,6 +20,9 @@ xcode-select --install
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/logicer16/pam-watchid/HEAD/install.sh)" -- enable
 ```
 
+> [!NOTE]
+> If you are using macOS Sonoma or later and have already modified `sudo_local`, ensure the file still contains the original `auth       sufficient     pam_tid.so` line, with or without the comment at the start. The enable script uses this to "anchor" where the `pam_watchid.so` line will be inserted. If the line isn't present, no changes will be made.
+
 ### Manual
 1. Run inside a cloned copy of the repo: 
 ```sh
