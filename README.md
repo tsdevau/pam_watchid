@@ -34,7 +34,7 @@ make install
   ```
    * *On macOS 14 and later:* Create/edit `/etc/pam.d/sudo_local` to include it in the list of modules, in order of execution.
    **If you are unsure of the order, place it on the first line.**
-   * *On macOS 13 and earlier:* Edit `/etc/pam.d/sudo` to **include it as the first line**: `auth sufficient pam_watchid.so`
+   * *On macOS 13 and earlier:* Edit `/etc/pam.d/sudo` to **include it as the first line**.
 
 > [!IMPORTANT]
 > Note that you might have other `auth` statements, **don't remove them**.
