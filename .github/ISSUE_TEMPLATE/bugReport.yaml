@@ -78,6 +78,9 @@ body:
         ```
     validations:
       required: true
+  - type: markdown
+    attributes:
+      value: "## Issue Description"
   - type: textarea
     attributes:
       label: Issue Description
