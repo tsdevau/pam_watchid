@@ -11,7 +11,7 @@ body:
         Thanks for filing this bug report. First we'll gather some details about your environment. This will better allow us to reproduce your issue. Then, you'll have some space to detail your issue.
   - type: checkboxes
     attributes:
-      label: Is there an existing issue for this?
+      label: Is there an existing issue / pull request for this?
       description: |
         Please [search](https://github.com/Logicer16/pam-watchid/issues?q=) to see if an issue already exists for the bug you encountered.
         It may already be in the process to being discussed or actively being fixed, or it may have already been closed or fixed in a recent change.

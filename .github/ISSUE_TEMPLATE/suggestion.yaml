@@ -1,0 +1,30 @@
+name: Enhancement 
+description: Suggest a new feature, behaviour, or other change
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: "# Suggestion ✨"
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for filing this issue.
+  - type: checkboxes
+    attributes:
+      label: Is there an existing issue / pull request for this?
+      description: |
+        Please [search](https://github.com/Logicer16/pam-watchid/issues?q=) to see if an issue already exists for the bug you encountered.
+        It may already be in the process to being discussed or actively being fixed, or it may have already been closed or fixed in a recent change.
+        If there is aleady an issue, please contribute any ***new*** information you have, and give the issue a 👍 so it can be prioritised.
+        If there is an issue which is similar but significantly different from yours, instead link to it as part of your description.
+      options:
+      - label: I have searched the existing issues and could not find one matching this new issue.
+        required: true
+  - type: markdown
+    attributes:
+      value: "## Issue Description"
+  - type: textarea
+    attributes:
+      label: Issue Description
+    validations:
+      required: true
