@@ -1,0 +1,85 @@
+name: Bug Report
+description: New issue for mistakes, unexpected behaviour, or other bugs
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: "# Bug Report 🐛"
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for filing this bug report. First we'll gather some details about your environment. This will better allow us to reproduce your issue. Then, you'll have some space to detail your issue.
+  - type: checkboxes
+    attributes:
+      label: Is there an existing issue for this?
+      description: |
+        Please [search](https://github.com/Logicer16/pam-watchid/issues?q=) to see if an issue already exists for the bug you encountered.
+        It may already be in the process to being discussed or actively being fixed, or it may have already been closed or fixed in a recent change.
+        If there is aleady an issue, please contribute any ***new*** information you have, and give the issue a 👍 so it can be prioritised.
+        If there is an issue which is similar but significantly different from yours, instead link to it as part of your description.
+      options:
+      - label: I have searched the existing issues and could not find one matching this new issue.
+        required: true
+  - type: markdown
+    attributes:
+      value: "## Environment"
+  - type: textarea
+    attributes:
+      render: txt
+      label: "macOS Verison"
+      description: |
+        Copy the output from:
+        ```sh
+        sw_vers
+        ```
+    validations:
+      required: true
+  - type: dropdown
+    attributes:
+      label: "Type of Xcode Installed"
+      description: |
+        Check the output of:
+        ```sh
+        xcode-select -p
+        ```
+        If you're using the Command Lines Tools, the outputted path should be:
+        ```
+        /Library/Developer/CommandLineTools/
+        ```
+        Otherwise, you're most likely using the Xcode application.
+      options:
+        - Command Line Tools
+        - Application
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      render: txt
+      label: "Xcode Verison"
+      description: |
+        If you are using the Xcode Command Line Tools, copy the output from:
+        ```sh
+        pkgutil --pkg-info=com.apple.pkg.CLTools_Executables | grep version
+        ```
+        If you are using the Xcode Application, copy the output from:
+        ```sh
+        xcodebuild -version
+        ```
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      render: txt
+      label: "Swift Verison"
+      description: |
+        Copy the output from:
+        ```sh
+        swift --version
+        ```
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Issue Description
+    validations:
+      required: true
