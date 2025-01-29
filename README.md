@@ -2,7 +2,7 @@
 
 A PAM plugin for authenticating using the new `kLAPolicyDeviceOwnerAuthenticationWithBiometricsOrWatch` API in macOS 10.15 (or `kLAPolicyDeviceOwnerAuthenticationWithBiometricsOrCompanion` in macOS 15 or later), written in Swift.
 
-![](demo.gif)
+![](https://github.com/Logicer16/pam-watchid/blob/docs/demo.gif?raw=true)
 
 ## Prerequisites
 
