@@ -1,7 +1,7 @@
 #! /bin/sh
 
 ( cd /tmp/ && \
-git clone https://github.com/Logicer16/pam-watchid.git && \
+git clone --depth 1 https://github.com/Logicer16/pam-watchid.git && \
 cd "$(basename "$_" .git)" && CLONE_SUCCESS="true" && \
 make $1
 # cleanup
