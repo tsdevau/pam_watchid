@@ -1,8 +1,10 @@
 # PAM WatchID
 
-A PAM plugin for authenticating using the new `kLAPolicyDeviceOwnerAuthenticationWithBiometricsOrWatch` API in macOS 10.15 (or `kLAPolicyDeviceOwnerAuthenticationWithBiometricsOrCompanion` in macOS 15 or later), written in Swift.
+A PAM plugin for authenticating using:
+- `kLAPolicyDeviceOwnerAuthenticationWithBiometricsOrWatch` API in macOS 10.15
+- `kLAPolicyDeviceOwnerAuthenticationWithBiometricsOrCompanion` API in macOS 15 or later.
 
-![](https://github.com/Logicer16/pam-watchid/blob/docs/demo.gif?raw=true)
+![](https://github.com/tsdevau/pam_watchid/blob/main/assets/demo.gif?raw=true)
 
 ## Prerequisites
 
@@ -16,12 +18,16 @@ xcode-select --install
 
 ### Quick Install (Recommended)
 
-```
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/logicer16/pam-watchid/HEAD/install.sh)" -- enable
+```sh
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/tsdevau/pam_watchid/HEAD/install.sh)"
 ```
 
-> [!NOTE]
-> If you are using macOS Sonoma or later and have already modified `sudo_local`, ensure the file still contains the original `auth       sufficient     pam_tid.so` line, with or without the comment at the start. The enable script uses this to "anchor" where the `pam_watchid.so` line will be inserted. If the line isn't present, no changes will be made.
+> [!TIP]
+> You can add the `--force` flag to the install command to reinstall the library if it already exists.
+> 
+> ```sh
+> /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/tsdevau/pam_watchid/HEAD/install.sh)" --force
+> ```
 
 ### Manual
 1. Run inside a cloned copy of the repo: 
@@ -29,7 +35,7 @@ xcode-select --install
 make install
 ```
 2. Modify the sudo pam config to include the `pam_watchid.so` module. Using the following line, follow the steps according to your version of macOS. 
-  ```
+  ```sh
   auth sufficient pam_watchid.so
   ```
    * *On macOS 14 and later:* Create/edit `/etc/pam.d/sudo_local` to include it in the list of modules, in order of execution.
