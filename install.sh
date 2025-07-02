@@ -25,33 +25,34 @@ if [ "${FORCE}" -eq 0 ] && [ -n "${INSTALLED_LIB}" ]; then
   exit 0
 fi
 
-echo "Installing pam-watchid..."
+echo "Installing pam_watchid.so..."
 git clone --depth 1 "${REPO_URL}" "${TMP_DIR}"
 cd "${TMP_DIR}"
 make install
 
-VERSION="$(cat VERSION)"
-LIB_PATH="${LIB_DEST}/pam_watchid.so.${VERSION}"
+LIB_PATH="${LIB_DEST}/pam_watchid.so"
+TID_PATH="pam_tid.so"
+SUDO_PATH="/etc/pam.d/sudo_local"
 
 # Ensure sudo_local exists
-if [ ! -f "/etc/pam.d/sudo_local" ]; then
-  sudo touch "/etc/pam.d/sudo_local"
+if [ ! -f "${SUDO_PATH}" ]; then
+  sudo touch "${SUDO_PATH}"
 fi
 
 # Ensure pam_tid.so line is present and uncommented
-if ! grep -q '^auth\s\+sufficient\s\+pam_tid.so' /etc/pam.d/sudo_local; then
-  if grep -q 'pam_tid.so' /etc/pam.d/sudo_local; then
-    sudo sed -i '' 's/^#\?\s*auth\s\+sufficient\s\+pam_tid.so/auth sufficient pam_tid.so/' /etc/pam.d/sudo_local
+if ! grep -q "^auth\s\+sufficient\s\+${TID_PATH}" "${SUDO_PATH}"; then
+  if grep -q '${TID_PATH}' "${SUDO_PATH}"; then
+    sudo sed -i '' "s|^#\?\s*auth\s\+sufficient\s\+${TID_PATH}|auth sufficient ${TID_PATH}|" "${SUDO_PATH}"
   else
-    echo 'auth sufficient pam_tid.so' | sudo tee -a /etc/pam.d/sudo_local >/dev/null
+    echo "auth sufficient ${TID_PATH}" | sudo tee -a "${SUDO_PATH}" >/dev/null
   fi
 fi
 
 # Ensure pam_watchid.so line is present with full path
-if ! grep -q "^auth\s\+sufficient\s\+${LIB_PATH}" /etc/pam.d/sudo_local; then
-  if grep -q 'pam_watchid.so' /etc/pam.d/sudo_local; then
-    sudo sed -i '' "s|^#\?\s*auth\s\+sufficient\s\+pam_watchid.so|auth sufficient ${LIB_PATH}|" /etc/pam.d/sudo_local
+if ! grep -q "^auth\s\+sufficient\s\+${LIB_PATH}" "${SUDO_PATH}"; then
+  if grep -q 'auth\s\+sufficient\s\+\S*pam_watchid\.so' "${SUDO_PATH}"; then
+    sudo sed -i '' "s|^#\?\s*auth\s\+sufficient\s\+\S*pam_watchid\.so|auth sufficient ${LIB_PATH}|" "${SUDO_PATH}"
   else
-    echo "auth sufficient ${LIB_PATH}" | sudo tee -a /etc/pam.d/sudo_local >/dev/null
+    echo "auth sufficient ${LIB_PATH}" | sudo tee -a "${SUDO_PATH}" >/dev/null
   fi
 fi
